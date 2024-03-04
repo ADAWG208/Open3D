@@ -1,0 +1,64 @@
+#include <iostream>
+    #include <vector>
+    #include <ctime>
+    #include <cstdlib>
+    
+    // Define the player and zombie classes
+    class Player {
+    public:
+        int health;
+        Player() : health(100) {}
+    };
+    
+    class Zombie {
+    public:
+        int health;
+        Zombie() : health(20) {}
+    };
+    
+    // Function to simulate shooting a zombie
+    void shootZombie(Zombie& zombie) {
+        zombie.health -= 10;
+    }
+    
+    int main() {
+        srand(static_cast<unsigned>(time(nullptr)));
+    
+        Player player;
+        std::vector<Zombie> zombies(5); // Create 5 zombies
+    
+        std::cout << "Welcome to the Zombie Shooter Game!" << std::endl;
+    
+        while (player.health > 0 && !zombies.empty()) {
+            std::cout << "\nPlayer Health: " << player.health << std::endl;
+    
+            // Simulate player shooting a zombie
+            if (rand() % 2 == 0) {
+                Zombie& randomZombie = zombies[rand() % zombies.size()];
+                shootZombie(randomZombie);
+                std::cout << "You shot a zombie! Zombie health: " << randomZombie.health << std::endl;
+                if (randomZombie.health <= 0) {
+                    zombies.erase(zombies.begin() + (rand() % zombies.size()));
+                    std::cout << "Zombie defeated!" << std::endl;
+                }
+            } else {
+                std::cout << "You missed the shot!" << std::endl;
+            }
+    
+            // Zombies attack the player
+            for (Zombie& zombie : zombies) {
+                player.health -= rand() % 6 + 1;
+            }
+    
+            if (player.health <= 0) {
+                std::cout << "\nGame Over! You were overwhelmed by zombies." << std::endl;
+            }
+        }
+    
+        if (zombies.empty()) {
+            std::cout << "\nCongratulations! You defeated all the zombies!" << std::endl;
+        }
+    
+        return 0;
+    }
+    
